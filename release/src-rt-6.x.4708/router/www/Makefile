@@ -9,7 +9,7 @@ install:
 	rm -rf $(INSTALLDIR)/www
 	mkdir -p $(INSTALLDIR)/www
 
-	cp *.gif *.png *.ico *.html *.php robots.txt $(INSTALLDIR)/www
+	cp *.ico *.html *.php robots.txt $(INSTALLDIR)/www
 
 # squish some of the files by trimming whitespace...
 
@@ -105,7 +105,7 @@ endif
 # Victek for RAF verion
 # Only include Captive Portal menu option and pages when configured.
 ifneq ($(TCONFIG_NOCAT),y)
-	rm -f $(INSTALLDIR)/www/splashd.asp
+	rm -f $(INSTALLDIR)/www/advanced-splashd.asp
 	rm -f $(INSTALLDIR)/www/splash.html
 	rm -f $(INSTALLDIR)/www/style.css
 	sed -i $(INSTALLDIR)/www/tomato.js -e "/NOCAT-BEGIN/,/NOCAT-END/d"
@@ -120,7 +120,6 @@ ifneq ($(TCONFIG_NGINX),y)
 	sed -i $(INSTALLDIR)/www/tomato.js -e "/NGINX-BEGIN/,/NGINX-END/d"
 	sed -i $(INSTALLDIR)/www/about.asp -e "/NGINX-BEGIN/,/NGINX-END/d"
 endif
-
 
 # Only include HFS/HFS+ option and pages when configured.
 ifneq ($(TCONFIG_HFS),y)
@@ -218,7 +217,7 @@ ifeq ($(TCONFIG_OPENVPN),y)
 else
 	rm -f $(INSTALLDIR)/www/vpn-server.asp
 	rm -f $(INSTALLDIR)/www/vpn-client.asp
-	rm -f $(INSTALLDIR)/www/vpn.js
+	rm -f $(INSTALLDIR)/www/js/vpn.js
 	sed -i $(INSTALLDIR)/www/tomato.js -e "/ OPENVPN-BEGIN/,/ OPENVPN-END/d"
 	sed -i $(INSTALLDIR)/www/about.asp -e "/ OPENVPN-BEGIN/,/ OPENVPN-END/d"
 endif
@@ -276,7 +275,7 @@ ifeq ($(TCONFIG_DNSCRYPT),y)
 else
 	sed -i $(INSTALLDIR)/www/basic-network.asp -e "/DNSCRYPT-BEGIN/,/DNSCRYPT-END/d"
 	sed -i $(INSTALLDIR)/www/about.asp -e "/DNSCRYPT-BEGIN/,/DNSCRYPT-END/d"
-endif
+ endif
 
 # clean up
 	cd $(INSTALLDIR)/www && \
@@ -328,3 +327,11 @@ endif
 	for F in $(wildcard *.js *.jsx); do \
 		[ -f $(INSTALLDIR)/www/$$F ] && $(TOP)/www/remcoms2.sh $(INSTALLDIR)/www/$$F c; \
 	done
+
+	# Copy over the directories needed for the new AdvancedTomato stuff (img, css and js)
+	mkdir -p $(INSTALLDIR)/www/img
+	cp -r img/* $(INSTALLDIR)/www/img/.
+	mkdir -p $(INSTALLDIR)/www/css
+	cp -r css/* $(INSTALLDIR)/www/css/.
+	mkdir -p $(INSTALLDIR)/www/js
+	cp -r js/* $(INSTALLDIR)/www/js/.

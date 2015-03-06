@@ -916,9 +916,10 @@ void start_upnp(void)
 					"system_uptime=yes\n"
 					"friendly_name=%s"" Router\n"
 					"model_name=%s\n"
-					"model_url=http://linksysinfo.org/index.php?forums/tomato-firmware.33/\n"
-					"manufacturer_name=Tomato Firmware\n"
+					"model_url=https://advancedtomato.com/\n"
+					"manufacturer_name=AdvancedTomato Firmware\n"
 					"manufacturer_url=http://linksysinfo.org/index.php?forums/tomato-firmware.33/\n"
+					"presentation_url=%s://%s/\n"
 					"\n"
 					,
 					get_wanface(),
@@ -928,7 +929,9 @@ void start_upnp(void)
 					nvram_get_int("upnp_secure") ? "yes" : "no",			// secure_mode (only forward to self)
 					nvram_get_int("upnp_ssdp_interval"),
 					nvram_safe_get("router_name"),
-					nvram_safe_get("t_model_name")
+					nvram_safe_get("t_model_name"),
+					nvram_safe_get("http_enable") ? "http" : "https",
+					nvram_safe_get("lan_ipaddr")
 				);
 
 				if (nvram_get_int("upnp_clean")) {

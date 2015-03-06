@@ -1098,6 +1098,11 @@ static const nvset_t nvset_list[] = {
 	{ "tomatoanon_cru",		V_RANGE(1, 12)			},
 	{ "tomatoanon_id",		V_LENGTH(0, 32)			},
 	{ "tomatoanon_notify",		V_01				},
+		
+// AdvancedTomato
+	{ "at_update",      V_LENGTH(0,32)    },
+	{ "at_navi",        V_LENGTH(0,32)    },
+	{ "web_nav",        V_TEXT(0, 4096)   },
 
 // nas-usb - !!TB
 #ifdef TCONFIG_USB
@@ -1910,5 +1915,4 @@ static void wo_nvcommit(char *url)
 	web_close();
 	nvram_commit();
 }
-
 
