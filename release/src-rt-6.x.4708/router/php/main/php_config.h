@@ -26,9 +26,6 @@
 /* #undef BETHREADS */
 
 /* */
-/* #undef BUGGY_SNMPRINT_VALUE */
-
-/* */
 /* #undef CDB_INCLUDE_FILE */
 
 /* Define if system uses EBCDIC */
@@ -133,6 +130,9 @@
 /* Whether to build odbc as dynamic module */
 /* #undef COMPILE_DL_ODBC */
 
+/* Whether to build opcache as dynamic module */
+#define COMPILE_DL_OPCACHE 1
+
 /* Whether to build openssl as dynamic module */
 /* #undef COMPILE_DL_OPENSSL */
 
@@ -207,9 +207,6 @@
 
 /* Whether to build spl as dynamic module */
 /* #undef COMPILE_DL_SPL */
-
-/* Whether to build sqlite as dynamic module */
-/* #undef COMPILE_DL_SQLITE */
 
 /* Whether to build sqlite3 as dynamic module */
 /* #undef COMPILE_DL_SQLITE3 */
@@ -351,8 +348,11 @@
 /* */
 #define DEFAULT_SHORT_OPEN_TAG "0"
 
+/* Define if dlsym() requires a leading underscore in symbol names. */
+/* #undef DLSYM_NEEDS_UNDERSCORE */
+
 /* Whether to enable chroot() function */
-/* #undef ENABLE_CHROOT_FUNC */
+#define ENABLE_CHROOT_FUNC 1
 
 /* */
 /* #undef ENABLE_GD_TTF */
@@ -374,6 +374,9 @@
 
 /* */
 /* #undef HAVE_ADABAS */
+
+/* Whether you have AI_V4MAPPED */
+/* #undef HAVE_AI_V4MAPPED */
 
 /* whether the compiler supports __alignof__ */
 #define HAVE_ALIGNOF 1
@@ -438,7 +441,7 @@
 #define HAVE_ATOLL 1
 
 /* Define to 1 if you have the <atomic.h> header file. */
-#define HAVE_ATOMIC_H 1
+/* #undef HAVE_ATOMIC_H */
 
 /* whether the compiler supports __attribute__ ((__aligned__)) */
 #define HAVE_ATTRIBUTE_ALIGNED 1
@@ -471,7 +474,7 @@
 /* #undef HAVE_BUILTIN_ATOMIC */
 
 /* */
-/* #undef HAVE_BUNDLED_PCRE */
+#define HAVE_BUNDLED_PCRE 1
 
 /* */
 /* #undef HAVE_BZ2 */
@@ -515,9 +518,6 @@
 /* */
 /* #undef HAVE_CODBC */
 
-/* */
-/* #undef HAVE_COLORCLOSESTHWB */
-
 /* Whether you have a Continuity Server */
 /* #undef HAVE_CONTINUITY */
 
@@ -540,7 +540,7 @@
 #define HAVE_CTIME_R 1
 
 /* */
-/* #undef HAVE_CTYPE */
+#define HAVE_CTYPE 1
 
 /* */
 /* #undef HAVE_CURL */
@@ -559,9 +559,6 @@
 
 /* Have cURL with SSL support */
 /* #undef HAVE_CURL_SSL */
-
-/* */
-/* #undef HAVE_CURL_VERSION_INFO */
 
 /* Define to 1 if you have the `cuserid' function. */
 #define HAVE_CUSERID 1
@@ -619,7 +616,7 @@
 /* #undef HAVE_DN_SKIPNAME */
 
 /* */
-/* #undef HAVE_DOM */
+#define HAVE_DOM 1
 
 /* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
 /* #undef HAVE_DOPRNT */
@@ -652,10 +649,10 @@
 /* #undef HAVE_ESOOB */
 
 /* Whether you want EXIF (metadata from images) support */
-/* #undef HAVE_EXIF */
+#define HAVE_EXIF 1
 
 /* Define to 1 if you have the `fabsf' function. */
-/* #undef HAVE_FABSF */
+#define HAVE_FABSF 1
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
@@ -666,8 +663,14 @@
 /* Define to 1 if you have the `flock' function. */
 #define HAVE_FLOCK 1
 
+/* Struct flock is BSD-type */
+/* #undef HAVE_FLOCK_BSD */
+
+/* Struct flock is Linux-type */
+#define HAVE_FLOCK_LINUX /**/
+
 /* Define to 1 if you have the `floorf' function. */
-/* #undef HAVE_FLOORF */
+#define HAVE_FLOORF 1
 
 /* Define if flush should be called explicitly after a buffered io. */
 /* #undef HAVE_FLUSHIO */
@@ -715,70 +718,22 @@
 #define HAVE_GCVT 1
 
 /* */
-/* #undef HAVE_GDIMAGECOLORRESOLVE */
+#define HAVE_GD_BUNDLED 1
 
 /* */
-/* #undef HAVE_GD_BUNDLED */
+#define HAVE_GD_CACHE_CREATE 1
 
 /* */
-/* #undef HAVE_GD_CACHE_CREATE */
+/* #undef HAVE_GD_FREETYPE */
 
 /* */
-/* #undef HAVE_GD_DYNAMIC_CTX_EX */
+#define HAVE_GD_JPG 1
 
 /* */
-/* #undef HAVE_GD_FONTCACHESHUTDOWN */
-
-/* */
-/* #undef HAVE_GD_FONTMUTEX */
-
-/* */
-/* #undef HAVE_GD_FREEFONTCACHE */
-
-/* */
-/* #undef HAVE_GD_GD2 */
-
-/* */
-/* #undef HAVE_GD_GIF_CREATE */
-
-/* */
-/* #undef HAVE_GD_GIF_CTX */
-
-/* */
-/* #undef HAVE_GD_GIF_READ */
-
-/* */
-/* #undef HAVE_GD_IMAGEELLIPSE */
-
-/* */
-/* #undef HAVE_GD_IMAGESETBRUSH */
-
-/* */
-/* #undef HAVE_GD_IMAGESETTILE */
-
-/* */
-/* #undef HAVE_GD_JPG */
-
-/* */
-/* #undef HAVE_GD_PNG */
-
-/* */
-/* #undef HAVE_GD_STRINGFT */
-
-/* */
-/* #undef HAVE_GD_STRINGFTEX */
-
-/* */
-/* #undef HAVE_GD_STRINGTTF */
-
-/* */
-/* #undef HAVE_GD_WBMP */
+#define HAVE_GD_PNG 1
 
 /* */
 /* #undef HAVE_GD_WEBP */
-
-/* */
-/* #undef HAVE_GD_XBM */
 
 /* */
 /* #undef HAVE_GD_XPM */
@@ -877,7 +832,7 @@
 #define HAVE_GRP_H 1
 
 /* Have HASH Extension */
-/* #undef HAVE_HASH_EXT */
+#define HAVE_HASH_EXT 1
 
 /* Define to 1 if you have the `hstrerror' function. */
 /* #undef HAVE_HSTRERROR */
@@ -904,7 +859,7 @@
 /* #undef HAVE_IBM_ICONV */
 
 /* */
-/* #undef HAVE_ICONV */
+#define HAVE_ICONV 1
 
 /* Define to 1 if you have the <ieeefp.h> header file. */
 /* #undef HAVE_IEEEFP_H */
@@ -991,7 +946,7 @@
 /* #undef HAVE_ISQL_H */
 
 /* whether to enable JavaScript Object Serialization support */
-/* #undef HAVE_JSON */
+#define HAVE_JSON 1 
 
 /* Define to 1 if you have the `kill' function. */
 #define HAVE_KILL 1
@@ -1051,19 +1006,7 @@
 /* #undef HAVE_LIBGD */
 
 /* */
-/* #undef HAVE_LIBGD13 */
-
-/* */
-/* #undef HAVE_LIBGD15 */
-
-/* */
-/* #undef HAVE_LIBGD20 */
-
-/* */
-/* #undef HAVE_LIBGD204 */
-
-/* */
-/* #undef HAVE_LIBICONV */
+#define HAVE_LIBICONV 1
 
 /* */
 /* #undef HAVE_LIBINTL */
@@ -1105,7 +1048,7 @@
 /* #undef HAVE_LIBT1 */
 
 /* */
-/* #undef HAVE_LIBXML */
+#define HAVE_LIBXML 1
 
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1
@@ -1150,7 +1093,7 @@
 #define HAVE_MBLEN 1
 
 /* whether to have multibyte regex support */
-/* #undef HAVE_MBREGEX */
+#define HAVE_MBREGEX 1
 
 /* Define to 1 if you have the `mbrlen' function. */
 #define HAVE_MBRLEN 1
@@ -1162,7 +1105,7 @@
 #define HAVE_MBSTATE_T 1
 
 /* whether to have multibyte string support */
-/* #undef HAVE_MBSTRING */
+#define HAVE_MBSTRING 1
 
 /* Define to 1 if you have the `memcpy' function. */
 #define HAVE_MEMCPY 1
@@ -1198,6 +1141,9 @@
 
 /* Define to 1 if you have the <monetary.h> header file. */
 /* #undef HAVE_MONETARY_H */
+
+/* Define if you have mprotect() function */
+#define HAVE_MPROTECT 1
 
 /* Define to 1 if you have the `mremap' function. */
 #define HAVE_MREMAP 1
@@ -1287,7 +1233,7 @@
 /* #undef HAVE_OLD_READDIR_R */
 
 /* Define to 1 if the oniguruma library is available */
-/* #undef HAVE_ONIG */
+#define HAVE_ONIG 1
 
 /* Define to 1 if you have the <openssl/crypto.h> header file. */
 /* #undef HAVE_OPENSSL_CRYPTO_H */
@@ -1301,11 +1247,17 @@
 /* */
 /* #undef HAVE_ORALDAP_10 */
 
+/* */
+/* #undef HAVE_ORALDAP_11 */
+
+/* */
+/* #undef HAVE_ORALDAP_12 */
+
 /* Whether struct _zend_object_value is packed */
 #define HAVE_PACKED_OBJECT_VALUE 0
 
 /* */
-#define HAVE_PCRE 1
+/* #undef HAVE_PCRE */
 
 /* */
 /* #undef HAVE_PDO_DBLIB */
@@ -1341,7 +1293,7 @@
 /* #undef HAVE_PG_LO_IMPORT_WITH_OID */
 
 /* */
-/* #undef HAVE_PHP_SESSION */
+#define HAVE_PHP_SESSION 1
 
 /* Whether you have phttpd */
 /* #undef HAVE_PHTTPD */
@@ -1438,6 +1390,9 @@
 
 /* */
 /* #undef HAVE_PSPELL */
+
+/* Define to 1 if the PS_STRINGS thing exists. */
+/* #undef HAVE_PS_STRINGS */
 
 /* do we have ptrace? */
 /* #undef HAVE_PTRACE */
@@ -1547,6 +1502,21 @@
 /* */
 /* #undef HAVE_SHMOP */
 
+/* Define if you have SysV IPC SHM support */
+/* #undef HAVE_SHM_IPC */
+
+/* Define if you have mmap(MAP_ANON) SHM support */
+/* #undef HAVE_SHM_MMAP_ANON */
+
+/* Define if you have mmap() SHM support */
+/* #undef HAVE_SHM_MMAP_FILE */
+
+/* Define if you have POSIX mmap() SHM support */
+/* #undef HAVE_SHM_MMAP_POSIX */
+
+/* Define if you have mmap("/dev/zero") SHM support */
+/* #undef HAVE_SHM_MMAP_ZERO */
+
 /* Define to 1 if you have the `shutdown' function. */
 #define HAVE_SHUTDOWN 1
 
@@ -1572,7 +1542,7 @@
 /* #undef HAVE_SIGWAITINFO */
 
 /* */
-/* #undef HAVE_SIMPLEXML */
+#define HAVE_SIMPLEXML 1
 
 /* Define to 1 if you have the `sin' function. */
 #define HAVE_SIN 1
@@ -1629,7 +1599,7 @@
 /* #undef HAVE_SQLEXT_H */
 
 /* */
-/* #undef HAVE_SQLITE3 */
+#define HAVE_SQLITE3 1
 
 /* have commercial sqlite3 with crypto support */
 /* #undef HAVE_SQLITE3_KEY */
@@ -1665,7 +1635,7 @@
 #define HAVE_STDARG_H 1
 
 /* Define to 1 if you have the <stdarg.h> header file. */
-/* #undef HAVE_STDARG_PROTOTYPES */
+#define HAVE_STDARG_PROTOTYPES 1
 
 /* Define to 1 if you have the <stdbool.h> header file. */
 /* #undef HAVE_STDBOOL_H */
@@ -1716,7 +1686,7 @@
 #define HAVE_STRLCPY 1
 
 /* Define to 1 if you have the `strndup' function. */
-/* #undef HAVE_STRNDUP */
+#define HAVE_STRNDUP 1
 
 /* Define to 1 if you have the `strnlen' function. */
 #define HAVE_STRNLEN 1
@@ -1791,7 +1761,7 @@
 #define HAVE_SYMLINK 1
 
 /* Define if you have the __sync_fetch_and_add function */
-/* #undef HAVE_SYNC_FETCH_AND_ADD */
+#define HAVE_SYNC_FETCH_AND_ADD 1
 
 /* do we have sysconf? */
 /* #undef HAVE_SYSCONF */
@@ -1802,11 +1772,11 @@
 /* Define to 1 if you have the <syslog.h> header file. */
 #define HAVE_SYSLOG_H 1
 
-/* Define if system timezone data is used */
-/* #undef HAVE_SYSTEM_TZDATA */
+/* FPM use systemd integration */
+/* #undef HAVE_SYSTEMD */
 
-/* Define for location of system timezone data */
-/* #undef HAVE_SYSTEM_TZDATA_PREFIX */
+/* Define to 1 if you have the <systemd/sd-daemon.h> header file. */
+/* #undef HAVE_SYSTEMD_SD_DAEMON_H */
 
 /* */
 /* #undef HAVE_SYSVMSG */
@@ -1852,6 +1822,9 @@
 /* Define to 1 if you have the <sys/poll.h> header file. */
 #define HAVE_SYS_POLL_H 1
 
+/* Define to 1 if you have the <sys/pstat.h> header file. */
+/* #undef HAVE_SYS_PSTAT_H */
+
 /* Define to 1 if you have the <sys/resource.h> header file. */
 #define HAVE_SYS_RESOURCE_H 1
 
@@ -1880,7 +1853,7 @@
 /* #undef HAVE_SYS_SYSEXITS_H */
 
 /* Define to 1 if you have the <sys/times.h> header file. */
-/* #undef HAVE_SYS_TIMES_H */
+#define HAVE_SYS_TIMES_H 1
 
 /* Define to 1 if you have the <sys/time.h> header file. */
 #define HAVE_SYS_TIME_H 1
@@ -1922,7 +1895,7 @@
 /* #undef HAVE_TIMES */
 
 /* Define to 1 if you have the <time.h> header file. */
-/* #undef HAVE_TIME_H */
+#define HAVE_TIME_H 1
 
 /* whether you have tm_gmtoff in struct tm */
 #define HAVE_TM_GMTOFF 1
@@ -1975,7 +1948,7 @@
 #define HAVE_UTIME 1
 
 /* Define to 1 if you have the `utimes' function. */
-/* #undef HAVE_UTIMES */
+#define HAVE_UTIMES 1
 
 /* Define to 1 if you have the <utime.h> header file. */
 #define HAVE_UTIME_H 1
@@ -1983,7 +1956,7 @@
 /* Define to 1 if `utime(file, NULL)' sets file's timestamp to the present. */
 #define HAVE_UTIME_NULL 1
 
-/* Wether struct utsname has domainname */
+/* Whether struct utsname has domainname */
 #define HAVE_UTSNAME_DOMAINNAME 1
 
 /* Define to 1 if you have the `vasprintf' function. */
@@ -2008,13 +1981,13 @@
 /* #undef HAVE_WDDX */
 
 /* */
-/* #undef HAVE_XML */
+#define HAVE_XML 1
 
 /* Define to 1 if you have the <xmlparse.h> header file. */
 /* #undef HAVE_XMLPARSE_H */
 
 /* */
-/* #undef HAVE_XMLREADER */
+#define HAVE_XMLREADER 1
 
 /* */
 /* #undef HAVE_XMLRPC */
@@ -2023,7 +1996,7 @@
 /* #undef HAVE_XMLTOK_H */
 
 /* */
-/* #undef HAVE_XMLWRITER */
+#define HAVE_XMLWRITER 1
 
 /* */
 /* #undef HAVE_XSL */
@@ -2035,7 +2008,7 @@
 /* #undef HAVE_YP_GET_DEFAULT_DOMAIN */
 
 /* */
-/* #undef HAVE_ZIP */
+#define HAVE_ZIP 1
 
 /* */
 #define HAVE_ZLIB 1
@@ -2056,20 +2029,16 @@
 #define HSREGEX 1
 
 /* iconv() is aliased to libiconv() in -liconv */
-/* #undef ICONV_ALIASED_LIBICONV */
+#define ICONV_ALIASED_LIBICONV 1
 
 /* Whether iconv supports error no or not */
-/* #undef ICONV_SUPPORTS_ERRNO */
+#define ICONV_SUPPORTS_ERRNO 0
 
 /* */
 /* #undef ISOLARIS */
 
 /* */
 /* #undef LINUX */
-
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
-#define LT_OBJDIR ".libs/"
 
 /* Whether asctime_r is declared */
 /* #undef MISSING_ASCTIME_R_DECL */
@@ -2098,7 +2067,10 @@
 /* Enable compressed protocol support */
 /* #undef MYSQLND_COMPRESSION_WANTED */
 
-/* Enable SSL support */
+/* Enable mysqlnd code that uses OpenSSL directly */
+/* #undef MYSQLND_HAVE_SSL */
+
+/* Enable core mysqlnd SSL code */
 /* #undef MYSQLND_SSL_SUPPORTED */
 
 /* Whether mysqlnd is enabled */
@@ -2150,19 +2122,19 @@
 #define PHP_BLOWFISH_CRYPT 1
 
 /* PHP build date */
-#define PHP_BUILD_DATE "2013-10-29"
+#define PHP_BUILD_DATE "2015-03-06"
 
 /* Define if your system has fork/vfork/CreateProcess */
 #define PHP_CAN_SUPPORT_PROC_OPEN 1
-
-/* */
-/* #undef PHP_CURL_URL_WRAPPERS */
 
 /* Whether the system supports extended DES salt */
 #define PHP_EXT_DES_CRYPT 1
 
 /* fpm group name */
 /* #undef PHP_FPM_GROUP */
+
+/* fpm systemd service type */
+/* #undef PHP_FPM_SYSTEMD */
 
 /* fpm user name */
 /* #undef PHP_FPM_USER */
@@ -2171,7 +2143,7 @@
 /* #undef PHP_HPUX_TIME_R */
 
 /* Path to iconv.h */
-/* #undef PHP_ICONV_H_PATH */
+#define PHP_ICONV_H_PATH </home/jacky/advancedtomato-arm/release/src-rt-6.x.4708/router/libiconv/staged/usr/include/iconv.h>
 
 /* Which iconv implementation to use */
 /* #undef PHP_ICONV_IMPL */
@@ -2198,7 +2170,7 @@
 /* #undef PHP_ONIG_BAD_KOI8_ENTRY */
 
 /* Define to 1 if the bundled oniguruma is used */
-/* #undef PHP_ONIG_BUNDLED */
+#define PHP_ONIG_BUNDLED 1
 
 /* uname output */
 #define PHP_OS "Linux"
@@ -2221,14 +2193,11 @@
 /* */
 #define PHP_SIGCHILD 0
 
-/* Have PDO */
-/* #undef PHP_SQLITE2_HAVE_PDO */
-
 /* Whether the system supports standard DES salt */
 #define PHP_STD_DES_CRYPT 1
 
 /* uname -a output */
-#define PHP_UNAME "Linux vicente-K53SJ 3.8.0-32-generic #47-Ubuntu SMP Tue Oct 1 22:35:23 UTC 2013 x86_64 x86_64 x86_64 GNU/Linux"
+#define PHP_UNAME "Linux build 3.2.0-4-amd64 #1 SMP Debian 3.2.65-1+deb7u2 x86_64 GNU/Linux"
 
 /* Whether PHP has to use its own crypt_r for blowfish, des and ext des */
 #define PHP_USE_PHP_CRYPT_R 1
@@ -2257,9 +2226,6 @@
 /* The size of `char', as computed by sizeof. */
 /* #undef SIZEOF_CHAR */
 
-/* The size of `char *', as computed by sizeof. */
-/* #undef SIZEOF_CHAR_P */
-
 /* The size of `int', as computed by sizeof. */
 #define SIZEOF_INT 4
 
@@ -2282,7 +2248,7 @@
 #define SIZEOF_PTRDIFF_T 8
 
 /* The size of `short', as computed by sizeof. */
-/* #undef SIZEOF_SHORT */
+#define SIZEOF_SHORT 2
 
 /* The size of `size_t', as computed by sizeof. */
 #define SIZEOF_SIZE_T 4
@@ -2298,12 +2264,6 @@
 
 /* have sqlite3 with extension support */
 /* #undef SQLITE_OMIT_LOAD_EXTENSION */
-
-/* Size of a pointer */
-/* #undef SQLITE_PTR_SZ */
-
-/* */
-/* #undef SQLITE_UTF8 */
 
 /* Needed in sqlunix.h for wchar defs */
 /* #undef SS_FBX */
@@ -2326,7 +2286,7 @@
 /* #undef TCADB_INCLUDE_FILE */
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-/* #undef TIME_WITH_SYS_TIME */
+#define TIME_WITH_SYS_TIME 1
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 /* #undef TM_IN_SYS_TIME */
@@ -2341,7 +2301,7 @@
 /* #undef UNIXWARE */
 
 /* whether to check multibyte regex backtrack */
-/* #undef USE_COMBINATION_EXPLOSION_CHECK */
+#define USE_COMBINATION_EXPLOSION_CHECK 1
 
 /* */
 /* #undef USE_GD_IMGSTRTTF */
