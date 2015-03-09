@@ -919,7 +919,6 @@ void start_upnp(void)
 					"model_url=https://advancedtomato.com/\n"
 					"manufacturer_name=AdvancedTomato Firmware\n"
 					"manufacturer_url=http://linksysinfo.org/index.php?forums/tomato-firmware.33/\n"
-					"presentation_url=%s://%s/\n"
 					"\n"
 					,
 					get_wanface(),
@@ -929,9 +928,7 @@ void start_upnp(void)
 					nvram_get_int("upnp_secure") ? "yes" : "no",			// secure_mode (only forward to self)
 					nvram_get_int("upnp_ssdp_interval"),
 					nvram_safe_get("router_name"),
-					nvram_safe_get("t_model_name"),
-					nvram_safe_get("http_enable") ? "http" : "https",
-					nvram_safe_get("lan_ipaddr")
+					nvram_safe_get("t_model_name")
 				);
 
 				if (nvram_get_int("upnp_clean")) {
@@ -949,7 +946,7 @@ void start_upnp(void)
 
 				if (nvram_match("upnp_mnp", "1")) {
 					int https = nvram_get_int("https_enable");
-					fprintf(f, "presentation_url=http%s://%s:%s/forward-upnp.asp\n",
+					fprintf(f, "presentation_url=http%s://%s:%s/#forward-upnp.asp\n",
 						https ? "s" : "", nvram_safe_get("lan_ipaddr"),
 						nvram_safe_get(https ? "https_lanport" : "http_lanport"));
 				}
