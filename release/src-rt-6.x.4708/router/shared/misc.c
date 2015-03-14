@@ -253,6 +253,9 @@ int check_wanup(void)
 		if (get_model() == MODEL_R6250) {
 			led(LED_WHITE,LED_OFF);
 		}
+		if (get_model() == MODEL_R6300v2) {
+			led(LED_WHITE,LED_OFF);
+		}
 		 return 0;
 	}
 
@@ -311,6 +314,9 @@ int check_wanup(void)
 		led(LED_WHITE,up);
 	}
 	if (get_model() == MODEL_R6250) {
+		led(LED_WHITE,up);
+	}
+	if (get_model() == MODEL_R6300v2) {
 		led(LED_WHITE,up);
 	}
 	return up;
@@ -556,14 +562,19 @@ void set_radio(int on, int unit)
 	n = on ? (WL_RADIO_SW_DISABLE << 16) : ((WL_RADIO_SW_DISABLE << 16) | 1);
 	wl_ioctl(nvram_safe_get(wl_nvname("ifname", unit, 0)), WLC_SET_RADIO, &n, sizeof(n));
 	if (!on) {
-		led(LED_WLAN, 0);
-		led(LED_DIAG, 0);
+		if (unit == 0) led(LED_WLAN, LED_OFF);
+		else led(LED_5G, LED_OFF);
+	} else {
+		if (unit == 0) led(LED_WLAN, LED_ON);
+		else led(LED_5G, LED_ON);
 	}
 #else
 	n = on ? 0 : WL_RADIO_SW_DISABLE;
 	wl_ioctl(nvram_safe_get(wl_nvname("ifname", unit, 0)), WLC_SET_RADIO, &n, sizeof(n));
 	if (!on) {
-		led(LED_DIAG, 0);
+		led(LED_WLAN, LED_OFF);
+	} else {
+		led(LED_WLAN, LED_ON);
 	}
 #endif
 }

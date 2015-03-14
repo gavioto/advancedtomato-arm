@@ -9,7 +9,7 @@
 prefix=/usr
 exec_prefix=${prefix}
 APCUPSD=/sbin/apcupsd
-SHUTDOWN=/sbin/shutdown
+SHUTDOWN=/sbin//shutdown
 SCRIPTDIR=/usr/local/apcupsd
 
 #
