@@ -7,6 +7,7 @@
 sudo dpkg --add-architecture i386
 ```
 
+
 - 2.) Download & install following packages:
 
 ```
@@ -69,6 +70,7 @@ cd advancedtomato-arm/release/src-rt-6.x.4708 && make help     # For Tomato ARM 
 
 cd advancedtomato-arm/release/src-rt-6.x.4708/make r7000z V1=AT-ARM V2=2.6-127
 ```
+
 
 After the compile process is done, you will find your router image inside "$HOME/advancedtomato-arm/release/src-rt-6.x.470/image"
 
