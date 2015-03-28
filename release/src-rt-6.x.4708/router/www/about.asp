@@ -208,6 +208,16 @@
 				- Revised IP/MAC Bandwidth Limiter<br>
 			</div>
 		</div>
+
+		<!-- NGINX-BEGIN -->
+		<div class="box"><div class="heading">Tomato-hyzoom feature</div>
+			<div class="content">
+				- MySQL Server integration and GUI<br>
+				<i>Copyright (C) 2014 Bao Weiquan, Hyzoom</i>, <a href='mailto:bwq518@gmail.com'>bwq518@gmail.com</a>
+			</div>
+		</div>
+		<!-- NGINX-END -->
+
 	</div>
 
 	<div class="box box-fluid">
