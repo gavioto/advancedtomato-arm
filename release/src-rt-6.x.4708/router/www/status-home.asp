@@ -183,6 +183,12 @@
 
 						}
 
+					} else {
+
+						// Interface disabled, hide enable/disable
+						$('#b_wl'+uidx+'_enable').hide();
+						$('#b_wl'+uidx+'_disable').hide();
+
 					}
 
 					c('channel'+uidx, stats.channel[uidx]);
