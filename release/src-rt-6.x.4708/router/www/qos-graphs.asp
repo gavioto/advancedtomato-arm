@@ -35,20 +35,17 @@ No part of this file may be used without permission.
 		.embedGraph {
 			text-align: center;
 		}
-
 	</style>
 	<script type="text/javascript">
-		// <% nvram("at_update,tomatoanon_answer,qos_classnames,web_svg,qos_enable,qos_obw,qos_ibw"); %>
+		// <% nvram("qos_classnames,web_svg,qos_enable"); %>
+
 		//<% qrate(); %>
 
 		var svgReady = 0;
 
 		var Unclassified = ['Unclassified'];
-		var Unused = ['Unused'];
-		var classNames = nvram.qos_classnames.split(' ');		//Toastman Class Labels
-		var abc = Unclassified.concat(classNames,Unused);
-
-		//      var abc = ['Unclassified', 'Highest', 'High', 'Medium', 'Low', 'Lowest', 'Class A', 'Class B', 'Class C', 'Class D', 'Class E'];
+		var classNames = nvram.qos_classnames.split(' ');		// Toastman - configurable class names
+		var abc = Unclassified.concat(classNames);
 
 		var colors = [
 			'c6e2ff',
@@ -61,89 +58,46 @@ No part of this file may be used without permission.
 			'deb887',
 			'F08080',
 			'ffa500',
-			'ffd700',
-			'D8D8D8'
+			'ffd700'
 		];
-
-		var toggle=true;
 
 		function mClick(n)
 		{
-			// One level back or SVG will think we're in IMG folder and pop 500 ERROR
-			loadPage('qos-detailed.asp', 'class=' + n);
+			loadPage('#qos-detailed.asp', 'class=' + n);
 		}
 
 		function showData()
 		{
 			var i, n, p;
-			var totalConnections, totalOutgoingBandwidth, totalIncomingBandwidth;
+			var ct, rt;
 
-			totalConnections = totalOutgoingBandwidth = totalIncomingBandwidth = 0;
-
-			for (i = 0; i < 11; ++i)
-			{
+			ct = rt = 0;
+			for (i = 0; i < 11; ++i) {
 				if (!nfmarks[i]) nfmarks[i] = 0;
-				totalConnections += nfmarks[i];
-				if (!qrates_out[i]) qrates_out[i] = 0;
-				totalOutgoingBandwidth += qrates_out[i];
-				if (!qrates_in[i]) qrates_in[i] = 0;
-				totalIncomingBandwidth += qrates_in[i];
+				ct += nfmarks[i];
+				if (!qrates[i]) qrates[i] = 0;
+				rt += qrates[i];
 			}
 
 			for (i = 0; i < 11; ++i) {
 				n = nfmarks[i];
 				E('ccnt' + i).innerHTML = n;
-				if (totalConnections > 0) p = (n / totalConnections) * 100;
+				if (ct > 0) p = (n / ct) * 100;
 				else p = 0;
 				E('cpct' + i).innerHTML = p.toFixed(2) + '%';
 			}
-			E('ccnt-total').innerHTML = totalConnections;
-
-			obwrate = nvram.qos_obw * 1000;
-			ibwrate = nvram.qos_ibw * 1000;
-
-			if(toggle == false)
-			{
-				totalorate = totalOutgoingBandwidth;
-				totalirate = totalIncomingBandwidth;
-				totalrateout = '100%';
-				totalratein = '100%';
-			} else
-			{
-				FreeOutgoing = (obwrate - totalOutgoingBandwidth);
-				qrates_out.push(FreeOutgoing);
-				FreeIncoming = (ibwrate - totalIncomingBandwidth);
-				qrates_in.push(FreeIncoming);
-				totalorate = obwrate;
-				totalirate = ibwrate;
-				totalrateout = ((totalOutgoingBandwidth / totalorate) * 100).toFixed(2) + '%';
-				totalratein = ((totalIncomingBandwidth / totalirate) * 100).toFixed(2) + '%';
-			}
+			E('ccnt-total').innerHTML = ct;
 
 			for (i = 1; i < 11; ++i) {
-				n = qrates_out[i];
-				E('bocnt' + i).innerHTML = (n / 1000).toFixed(2)
-				E('bocntx' + i).innerHTML = (n / 8192).toFixed(2)
-				if (totalOutgoingBandwidth > 0) p = (n / totalorate) * 100;
+				n = qrates[i];
+				E('bcnt' + i).innerHTML = (n / 1000).toFixed(2)
+				E('bcntx' + i).innerHTML = (n / 8192).toFixed(2)
+				if (rt > 0) p = (n / rt) * 100;
 				else p = 0;
-				E('bopct' + i).innerHTML = p.toFixed(2) + '%';
+				E('bpct' + i).innerHTML = p.toFixed(2) + '%';
 			}
-			E('bocnt-total').innerHTML = (totalOutgoingBandwidth / 1000).toFixed(2)
-			E('bocntx-total').innerHTML = (totalOutgoingBandwidth / 8192).toFixed(2)
-
-			E('rateout').innerHTML = totalrateout;
-
-			for (i = 1; i < 11; ++i) {
-				n = qrates_in[i];
-				E('bicnt' + i).innerHTML = (n / 1000).toFixed(2)
-				E('bicntx' + i).innerHTML = (n / 8192).toFixed(2)
-				if (totalIncomingBandwidth > 0) p = (n / totalirate) * 100;
-				else p = 0;
-				E('bipct' + i).innerHTML = p.toFixed(2) + '%';
-			}
-			E('bicnt-total').innerHTML = (totalIncomingBandwidth / 1000).toFixed(2)
-			E('bicntx-total').innerHTML = (totalIncomingBandwidth / 8192).toFixed(2)
-			E('ratein').innerHTML = totalratein;
+			E('bcnt-total').innerHTML = (rt / 1000).toFixed(2)
+			E('bcntx-total').innerHTML = (rt / 8192).toFixed(2)
 		}
 
 
@@ -152,26 +106,19 @@ No part of this file may be used without permission.
 		ref.refresh = function(text)
 		{
 			nfmarks = [];
-			qrates_out = [];
-			qrates_in = [];
-
-			try
-			{
+			qrates = [];
+			try {
 				eval(text);
 			}
-			catch (ex)
-			{
+			catch (ex) {
 				nfmarks = [];
-				qrates_out = [];
-				qrates_in = [];
+				qrates = [];
 			}
 
 			showData();
-			if (svgReady == 1)
-			{
-				updateConnectionDistribution(nfmarks, abc);
-				updateBandwidthOutgoing(qrates_out, abc);
-				updateBandwidthIncoming(qrates_in, abc);
+			if (svgReady == 1) {
+				updateCD(nfmarks, abc);
+				updateBD(qrates, abc);
 			}
 		}
 
@@ -179,91 +126,41 @@ No part of this file may be used without permission.
 		{
 			var i, e, d, w;
 
-			try
-			{
-				for (i = 2; i >= 0; --i)
-				{
+			try {
+				for (i = 1; i >= 0; --i) {
 					e = E('svg' + i);
 					d = e.getSVGDocument();
-
-					if (d.defaultView)
-					{
-						w = d.defaultView;
-					}
-					else
-					{
-						w = e.getWindow();
-					}
-
+					if (d.defaultView) w = d.defaultView;
+					else w = e.getWindow();
 					if (!w.ready) break;
-
-					switch(i)
-					{
-						case 0:
-						{
-							updateConnectionDistribution = w.updateSVG;
-							break;
-						}
-
-						case 1:
-						{
-							updateBandwidthOutgoing = w.updateSVG;
-							break;
-						}
-
-						case 2:
-						{
-							updateBandwidthIncoming = w.updateSVG;
-							break;
-						}
-					}
+					if (i == 0) updateCD = w.updateSVG;
+					else updateBD = w.updateSVG;
 				}
 			}
-			catch (ex)
-			{
+			catch (ex) {
 			}
 
-			if (i < 0)
-			{
+			if (i < 0) {
 				svgReady = 1;
-				updateConnectionDistribution(nfmarks, abc);
-				updateBandwidthOutgoing(qrates_out, abc);
-				updateBandwidthIncoming(qrates_in, abc);
+				updateCD(nfmarks, abc);
+				updateBD(qrates, abc);
 			}
-			else if (--svgReady > -5)
-			{
+			else if (--svgReady > -5) {
 				setTimeout(checkSVG, 500);
-			}
-		}
-
-		function showGraph()
-		{
-			if(toggle == true)
-			{
-				toggle=false;
-				qrates_out = qrates_out.slice(0, -1);
-				qrates_in = qrates_in.slice(0, -1);
-				showData();
-				checkSVG();
-			} else
-			{
-				toggle=true;
-				showData();
-				checkSVG();
 			}
 		}
 
 		function init() {
 
 			// Write Graphs to content
-			for (i=0; i < 3; i++) {
+			for (i=0; i < 2; i++) {
 				$('#svg-'+i).html('<embed id="svg' + i + '" type="image/svg+xml" pluginspage="http://www.adobe.com/svg/viewer/install/" src="img/qos-graph.svg?n=' + i + '&v=<% version(); %>" style="width:310px;height:310px;"></embed>').css('text-align', 'center');
 			}
 
 			nbase = fixInt(cookie.get('qnbase'), 0, 1, 0);
 			showData();
 			checkSVG();
-			showGraph();
+			// showGraph();
 			ref.initPage(2000, 3);
 		}
 	</script>
@@ -297,14 +194,14 @@ No part of this file may be used without permission.
 			</div>
 		</div>
 
-		<div class="box graphs">
+		<div class="box graphs last">
 			<div class="heading">Bandwidth Distribution (Outbound)</div>
 			<div class="content">
 				<div id="svg-1" class="embedGraph"></div>
 
 				<table id="secondTable">
 					<tr><td class="color" style="height:1em; margin-right: 5px;"></td><td class="title">&nbsp;</td><td class="thead count">kbit/s</td><td class="thead count">KB/s</td><td class="thead pct">Rate</td></tr>
-					<tr><td>&nbsp;</td><td class="total">Total</a></td><td id="bocnt-total" class="total count"></td><td id="bocntx-total" class="total count"></td><td id="rateout" class="total pct"></td></tr>
+					<tr><td>&nbsp;</td><td class="total">Total</td><td id="bcnt-total" class="total count"></td><td id="bcntx-total" class="total count"></td><td id="rateout" class="total pct"></td></tr>
 				</table>
 
 				<script type='text/javascript'>
@@ -312,41 +209,16 @@ No part of this file may be used without permission.
 						$('#secondTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
 							'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
 							'<td class="title" style="width:45px">' + abc[i] + '</td>' +
-							'<td id="bocnt' + i + '" class="count" style="width:60px"></td>' +
-							'<td id="bocntx' + i + '" class="count" style="width:50px"></td>' +
-							'<td id="bopct' + i + '" class="pct"></td></tr>');
+							'<td id="bcnt' + i + '" class="count" style="width:60px"></td>' +
+							'<td id="bcntx' + i + '" class="count" style="width:50px"></td>' +
+							'<td id="bpct' + i + '" class="pct"></td></tr>');
 					}
 				</script>
 			</div>
 		</div>
 
-		<div class="box graphs">
-			<div class="heading">Bandwidth Distribution (Inbound)</div>
-			<div class="content">
-				<div id="svg-2" class="embedGraph"></div>
-
-				<table id="thirdTable">
-					<tr><td class="color" style="height:1em; margin-right: 5px;"></td><td class="title">&nbsp;</td><td class="thead count">kbit/s</td><td class="thead count">KB/s</td><td class="thead pct">Rate</td></tr>
-					<tr><td>&nbsp;</td><td class="total">Total</a></td><td id="bicnt-total" class="total count"></td><td id="bicntx-total" class="total count"></td><td id="ratein" class="total pct"></td></tr>
-				</table>
-
-				<script type="text/javascript">
-					for (i = 1; i < 11; ++i) {
-						$('#thirdTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
-							'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
-							'<td class="title">' + abc[i] + '</td>' +
-							'<td id="bicnt' + i + '" class="count"></td>' +
-							'<td id="bicntx' + i + '" class="count"></td>' +
-							'<td id="bipct' + i + '" class="pct"></td></tr>');
-					}
-				</script>
-
-			</div>
-		</div>
 	</div>
 
-	<button name="mybtn" value="Zoom Graphs" type="button" onclick="showGraph()" class="btn">Zoom Graphs <i class="icon-search"></i></button>
-	<script type="text/javascript">$('button[name="mybtn"]').before(genStdRefresh(1,2,"ref.toggle()"));</script>
-
+	<script type="text/javascript">$('.box.last').after(genStdRefresh(1,2,"ref.toggle()"));</script>
 	<script type="text/javascript">init();</script>
 </content>
