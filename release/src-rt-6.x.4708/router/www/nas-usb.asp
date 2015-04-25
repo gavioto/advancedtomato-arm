@@ -9,7 +9,7 @@ No part of this file may be used without permission.
 	<style>textarea { width: 100%; }</style>
 	<script type="text/javascript">
 
-		//	<% nvram("usb_enable,usb_uhci,usb_ohci,usb_usb2,usb_usb3,usb_mmc,usb_storage,usb_printer,usb_printer_bidirect,usb_automount,usb_fs_ext3,usb_fs_ext4,usb_fs_fat,usb_fs_ntfs,usb_fs_hfs,script_usbmount,script_usbumount,script_usbhotplug,idle_enable,usb_3g"); %>
+		//	<% nvram("usb_enable,usb_uhci,usb_ohci,usb_usb2,usb_usb3,usb_mmc,usb_storage,usb_printer,usb_printer_bidirect,usb_automount,usb_fs_ext3,usb_fs_ext4,usb_fs_fat,usb_fs_ntfs,usb_ntfs_driver,usb_fs_hfs,script_usbmount,script_usbumount,script_usbhotplug,idle_enable,usb_3g"); %>
 		//	<% usbdevices(); %>
 
 		list = [];
@@ -243,6 +243,7 @@ No part of this file may be used without permission.
 			/* LINUX26-END */
 			/* NTFS-BEGIN */
 			E('_f_ntfs').disabled = b || a;
+			E('_usb_ntfs_driver').disabled = b || a;
 			/* NTFS-END */
 			/* HFS-BEGIN */
 			E('_f_hfs').disabled = b || a; //!Victek
@@ -365,6 +366,17 @@ No part of this file may be used without permission.
 							,{ suffix: '&nbsp; HFS / HFS+ &nbsp;', name: 'f_hfs', type: 'checkbox', value: nvram.usb_fs_hfs == 1 }
 							/* HFS-END */
 						] },
+						/* NTFS-BEGIN */
+						{ title: 'NTFS Driver', indent: 2, name: 'usb_ntfs_driver', type: 'select', options: [
+							['ntfs3g','Open NTFS-3G driver'],
+							/* TUXERA-BEGIN */
+							['tuxera','Tuxera driver'],
+							/* TUXERA-END */
+							/* PARAGON-BEGIN */
+							['paragon','Paragon driver'],
+							/* PARAGON-END */
+							], value: nvram.usb_ntfs_driver },
+						/* NTFS-END */
 						/* LINUX26-BEGIN */
 						/* MICROSD-BEGIN */
 						{ title: 'SD/MMC Card Support', indent: 2, name: 'f_mmc', type: 'checkbox', value: nvram.usb_mmc == 1 },

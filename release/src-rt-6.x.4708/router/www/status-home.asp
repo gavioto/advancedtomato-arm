@@ -12,7 +12,7 @@
 		bgmo = {'disabled':'-','mixed':'Auto','b-only':'B Only','g-only':'G Only','bg-mixed':'B/G Mixed','lrs':'LRS','n-only':'N Only'};
 	</script>
 	<script type="text/javascript">
-		show_dhcpc = ((nvram.wan_proto == 'dhcp') || (((nvram.wan_proto == 'l2tp') || (nvram.wan_proto == 'pptp')) && (nvram.pptp_dhcp == '1')));
+		show_dhcpc = ((nvram.wan_proto == 'dhcp') || (nvram.wan_proto == 'lte') || (((nvram.wan_proto == 'l2tp') || (nvram.wan_proto == 'pptp')) && (nvram.pptp_dhcp == '1')));
 		show_codi = ((nvram.wan_proto == 'pppoe') || (nvram.wan_proto == 'l2tp') || (nvram.wan_proto == 'pptp') || (nvram.wan_proto == 'ppp3g'));
 
 		show_radio = [];
@@ -126,6 +126,7 @@
 
 			c('cpu', stats.cpuload);
 			c('cpupercent', stats.cpupercent);
+			c('wlsense', stats.wlsense);
 			c('uptime', stats.uptime);
 			c('time', stats.time);
 			c('wanip', stats.wanip);
@@ -240,6 +241,7 @@
 			<div class="content" id="sesdiv_system">
 				<div class="section"></div>
 				<script type="text/javascript">
+				var a = nvstat.free / nvstat.size * 100.0;
 					createFieldTable('', [
 						{ title: 'Name', text: nvram.router_name },
 						{ title: 'Model', text: nvram.t_model_name },
@@ -253,6 +255,8 @@
 						{ title: 'CPU Load <small>(1 / 5 / 15 mins)</small>', rid: 'cpu', text: stats.cpuload },
 						{ title: 'Total / Free Memory', rid: 'memory', text: stats.memory + '<div class="progress"><div class="bar" style="width: ' + stats.memoryperc + ';"></div></div>' },
 						{ title: 'Total / Free Swap', rid: 'swap', text: stats.swap + '<div class="progress"><div class="bar" style="width: ' + stats.swapperc + ';"></div></div>', hidden: (stats.swap == '') },
+						{ title: 'Total / Free NVRAM', text: scaleSize(nvstat.size) + ' / ' + scaleSize(nvstat.free) + ' <small>(' + (a).toFixed(2) + '%)</small> <div class="progress"><div class="bar" style="width: ' + (a).toFixed(2) + '%;"></div></div>' },
+						{ title: 'Wireless Temperature', rid: 'wlsense', text: stats.wlsense }
 						], '#sesdiv_system', 'data-table dataonly');
 				</script>
 			</div>
@@ -265,7 +269,7 @@
 				<script type="text/javascript">
 					createFieldTable('', [
 						{ title: 'MAC Address', text: nvram.wan_hwaddr },
-						{ title: 'Connection Type', text: { 'dhcp':'DHCP', 'static':'Static IP', 'pppoe':'PPPoE', 'pptp':'PPTP', 'l2tp':'L2TP', 'ppp3g':'3G Modem' }[nvram.wan_proto] || '-' },
+						{ title: 'Connection Type', text: { 'dhcp':'DHCP', 'static':'Static IP', 'pppoe':'PPPoE', 'pptp':'PPTP', 'l2tp':'L2TP', 'ppp3g':'3G Modem', 'lte':'4G/LTE' }[nvram.wan_proto] || '-' },
 						{ title: 'IP Address', rid: 'wanip', text: stats.wanip },
 						{ title: 'Previous WAN IP', rid: 'wanprebuf', text: stats.wanprebuf, hidden: ((nvram.wan_proto != 'pppoe') && (nvram.wan_proto != 'pptp') && (nvram.wan_proto != 'l2tp') && (nvram.wan_proto != 'ppp3g')) }, //Victek
 						{ title: 'Subnet Mask', rid: 'wannetmask', text: stats.wannetmask },
