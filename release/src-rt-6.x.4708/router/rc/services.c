@@ -1489,6 +1489,10 @@ void start_ntpc(void)
 
 	if (nvram_get_int("ntp_updates") >= 0) {
 		strcpy(servers, nvram_safe_get("ntp_server"));
+
+		if (nvram_match("dnscrypt_proxy", "1"))
+			eval("ntp2ip");
+
 		xstart("ntpclient", "-h", servers, "-i", "3", "-l", "-s");
 	}
 }
