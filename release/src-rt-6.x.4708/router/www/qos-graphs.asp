@@ -37,15 +37,16 @@ No part of this file may be used without permission.
 		}
 	</style>
 	<script type="text/javascript">
-		// <% nvram("qos_classnames,web_svg,qos_enable"); %>
+		// <% nvram("qos_classnames,web_svg,qos_enable,qos_obw,qos_ibw"); %>
 
 		//<% qrate(); %>
 
 		var svgReady = 0;
 
 		var Unclassified = ['Unclassified'];
-		var classNames = nvram.qos_classnames.split(' ');		// Toastman - configurable class names
-		var abc = Unclassified.concat(classNames);
+		var Unused = ['Unused'];
+		var classNames = nvram.qos_classnames.split(' ');		//Toastman Class Labels
+		var abc = Unclassified.concat(classNames,Unused);
 
 		var colors = [
 			'c6e2ff',
@@ -58,7 +59,8 @@ No part of this file may be used without permission.
 			'deb887',
 			'F08080',
 			'ffa500',
-			'ffd700'
+			'ffd700',
+			'D8D8D8'
 		];
 
 		function mClick(n)
@@ -69,35 +71,71 @@ No part of this file may be used without permission.
 		function showData()
 		{
 			var i, n, p;
-			var ct, rt;
+			var totalConnections, totalOutgoingBandwidth, totalIncomingBandwidth;
 
-			ct = rt = 0;
+			totalConnections = totalOutgoingBandwidth = totalIncomingBandwidth = 0;
+
 			for (i = 0; i < 11; ++i) {
 				if (!nfmarks[i]) nfmarks[i] = 0;
-				ct += nfmarks[i];
-				if (!qrates[i]) qrates[i] = 0;
-				rt += qrates[i];
+				totalConnections += nfmarks[i];
+				if (!qrates_out[i]) qrates_out[i] = 0;
+				totalOutgoingBandwidth += qrates_out[i];
+				if (!qrates_in[i]) qrates_in[i] = 0;
+				totalIncomingBandwidth += qrates_in[i];
 			}
 
 			for (i = 0; i < 11; ++i) {
 				n = nfmarks[i];
 				E('ccnt' + i).innerHTML = n;
-				if (ct > 0) p = (n / ct) * 100;
+				if (totalConnections > 0) p = (n / totalConnections) * 100;
 				else p = 0;
 				E('cpct' + i).innerHTML = p.toFixed(2) + '%';
 			}
-			E('ccnt-total').innerHTML = ct;
+			E('ccnt-total').innerHTML = totalConnections;
+
+			obwrate = nvram.qos_obw * 1000;
+			ibwrate = nvram.qos_ibw * 1000;
+
+			if(toggle == false)	{
+				totalorate = totalOutgoingBandwidth;
+				totalirate = totalIncomingBandwidth;
+				totalrateout = '100%';
+				totalratein = '100%';
+			} else {
+				FreeOutgoing = (obwrate - totalOutgoingBandwidth);
+				qrates_out.push(FreeOutgoing);
+				FreeIncoming = (ibwrate - totalIncomingBandwidth);
+				qrates_in.push(FreeIncoming);
+				totalorate = obwrate;
+				totalirate = ibwrate;
+				totalrateout = ((totalOutgoingBandwidth / totalorate) * 100).toFixed(2) + '%';
+				totalratein = ((totalIncomingBandwidth / totalirate) * 100).toFixed(2) + '%';
+			}
 
 			for (i = 1; i < 11; ++i) {
-				n = qrates[i];
-				E('bcnt' + i).innerHTML = (n / 1000).toFixed(2)
-				E('bcntx' + i).innerHTML = (n / 8192).toFixed(2)
-				if (rt > 0) p = (n / rt) * 100;
+				n = qrates_out[i];
+				E('bocnt' + i).innerHTML = (n / 1000).toFixed(2)
+				E('bocntx' + i).innerHTML = (n / 8192).toFixed(2)
+				if (totalOutgoingBandwidth > 0) p = (n / totalorate) * 100;
 				else p = 0;
-				E('bpct' + i).innerHTML = p.toFixed(2) + '%';
+				E('bopct' + i).innerHTML = p.toFixed(2) + '%';
 			}
-			E('bcnt-total').innerHTML = (rt / 1000).toFixed(2)
-			E('bcntx-total').innerHTML = (rt / 8192).toFixed(2)
+
+			E('bocnt-total').innerHTML = (totalOutgoingBandwidth / 1000).toFixed(2)
+			E('bocntx-total').innerHTML = (totalOutgoingBandwidth / 8192).toFixed(2)
+			E('rateout').innerHTML = totalrateout;
+
+			for (i = 1; i < 11; ++i) {
+				n = qrates_in[i];
+				E('bicnt' + i).innerHTML = (n / 1000).toFixed(2)
+				E('bicntx' + i).innerHTML = (n / 8192).toFixed(2)
+				if (totalIncomingBandwidth > 0) p = (n / totalirate) * 100;
+				else p = 0;
+				E('bipct' + i).innerHTML = p.toFixed(2) + '%';
+			}
+			E('bicnt-total').innerHTML = (totalIncomingBandwidth / 1000).toFixed(2)
+			E('bicntx-total').innerHTML = (totalIncomingBandwidth / 8192).toFixed(2)
+			E('ratein').innerHTML = totalratein;
 		}
 
 
@@ -106,19 +144,26 @@ No part of this file may be used without permission.
 		ref.refresh = function(text)
 		{
 			nfmarks = [];
-			qrates = [];
-			try {
+			qrates_out = [];
+			qrates_in = [];
+
+			try 
+			{
 				eval(text);
 			}
-			catch (ex) {
+			catch (ex)
+			{
 				nfmarks = [];
-				qrates = [];
+				qrates_out = [];
+				qrates_in = [];
 			}
 
 			showData();
-			if (svgReady == 1) {
-				updateCD(nfmarks, abc);
-				updateBD(qrates, abc);
+			if (svgReady == 1) 
+			{
+				updateConnectionDistribution(nfmarks, abc);
+				updateBandwidthOutgoing(qrates_out, abc);
+				updateBandwidthIncoming(qrates_in, abc);
 			}
 		}
 
@@ -126,27 +171,77 @@ No part of this file may be used without permission.
 		{
 			var i, e, d, w;
 
-			try {
-				for (i = 1; i >= 0; --i) {
+			try
+			{
+				for (i = 2; i >= 0; --i) 
+				{
 					e = E('svg' + i);
 					d = e.getSVGDocument();
-					if (d.defaultView) w = d.defaultView;
-					else w = e.getWindow();
+
+					if (d.defaultView)
+					{
+						w = d.defaultView;
+					}
+					else
+					{
+						w = e.getWindow();
+					}
+
 					if (!w.ready) break;
-					if (i == 0) updateCD = w.updateSVG;
-					else updateBD = w.updateSVG;
+
+					switch(i)
+					{
+						case 0:
+						{
+							updateConnectionDistribution = w.updateSVG;
+							break;
+						}
+
+						case 1:
+						{
+							updateBandwidthOutgoing = w.updateSVG;
+							break;
+						}
+
+						case 2:
+						{
+							updateBandwidthIncoming = w.updateSVG;
+							break;
+						}
+					}
 				}
 			}
-			catch (ex) {
+			catch (ex) 
+			{
 			}
 
-			if (i < 0) {
+			if (i < 0) 
+			{
 				svgReady = 1;
-				updateCD(nfmarks, abc);
-				updateBD(qrates, abc);
+				updateConnectionDistribution(nfmarks, abc);
+				updateBandwidthOutgoing(qrates_out, abc);
+				updateBandwidthIncoming(qrates_in, abc);
 			}
-			else if (--svgReady > -5) {
+			else if (--svgReady > -5) 
+			{
 				setTimeout(checkSVG, 500);
+			}
+		}
+
+		function showGraph()
+		{
+			if(toggle == true)
+			{
+				toggle=false;
+				qrates_out = qrates_out.slice(0, -1);	
+				qrates_in = qrates_in.slice(0, -1);
+				showData();
+				checkSVG();
+			} else 
+			{
+				toggle=true;
+				showData();
+				checkSVG();
 			}
 		}
 
@@ -160,7 +255,7 @@ No part of this file may be used without permission.
 			nbase = fixInt(cookie.get('qnbase'), 0, 1, 0);
 			showData();
 			checkSVG();
-			// showGraph();
+			showGraph();
 			ref.initPage(2000, 3);
 		}
 	</script>
