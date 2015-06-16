@@ -35,10 +35,10 @@ No part of this file may be used without permission.
 		.embedGraph {
 			text-align: center;
 		}
+
 	</style>
 	<script type="text/javascript">
-		// <% nvram("qos_classnames,web_svg,qos_enable,qos_obw,qos_ibw"); %>
-
+		// <% nvram("at_update,tomatoanon_answer,qos_classnames,web_svg,qos_enable,qos_obw,qos_ibw"); %>
 		//<% qrate(); %>
 
 		var svgReady = 0;
@@ -47,6 +47,8 @@ No part of this file may be used without permission.
 		var Unused = ['Unused'];
 		var classNames = nvram.qos_classnames.split(' ');		//Toastman Class Labels
 		var abc = Unclassified.concat(classNames,Unused);
+
+		//      var abc = ['Unclassified', 'Highest', 'High', 'Medium', 'Low', 'Lowest', 'Class A', 'Class B', 'Class C', 'Class D', 'Class E'];
 
 		var colors = [
 			'c6e2ff',
@@ -63,9 +65,12 @@ No part of this file may be used without permission.
 			'D8D8D8'
 		];
 
+		var toggle=true;
+
 		function mClick(n)
 		{
-			loadPage('#qos-detailed.asp', 'class=' + n);
+			// One level back or SVG will think we're in IMG folder and pop 500 ERROR
+			loadPage('qos-detailed.asp', 'class=' + n);
 		}
 
 		function showData()
@@ -75,7 +80,8 @@ No part of this file may be used without permission.
 
 			totalConnections = totalOutgoingBandwidth = totalIncomingBandwidth = 0;
 
-			for (i = 0; i < 11; ++i) {
+			for (i = 0; i < 11; ++i)
+			{
 				if (!nfmarks[i]) nfmarks[i] = 0;
 				totalConnections += nfmarks[i];
 				if (!qrates_out[i]) qrates_out[i] = 0;
@@ -96,12 +102,14 @@ No part of this file may be used without permission.
 			obwrate = nvram.qos_obw * 1000;
 			ibwrate = nvram.qos_ibw * 1000;
 
-			if(toggle == false)	{
+			if(toggle == false)
+			{
 				totalorate = totalOutgoingBandwidth;
 				totalirate = totalIncomingBandwidth;
 				totalrateout = '100%';
 				totalratein = '100%';
-			} else {
+			} else
+			{
 				FreeOutgoing = (obwrate - totalOutgoingBandwidth);
 				qrates_out.push(FreeOutgoing);
 				FreeIncoming = (ibwrate - totalIncomingBandwidth);
@@ -120,9 +128,9 @@ No part of this file may be used without permission.
 				else p = 0;
 				E('bopct' + i).innerHTML = p.toFixed(2) + '%';
 			}
-
 			E('bocnt-total').innerHTML = (totalOutgoingBandwidth / 1000).toFixed(2)
 			E('bocntx-total').innerHTML = (totalOutgoingBandwidth / 8192).toFixed(2)
+
 			E('rateout').innerHTML = totalrateout;
 
 			for (i = 1; i < 11; ++i) {
@@ -147,7 +155,7 @@ No part of this file may be used without permission.
 			qrates_out = [];
 			qrates_in = [];
 
-			try 
+			try
 			{
 				eval(text);
 			}
@@ -159,7 +167,7 @@ No part of this file may be used without permission.
 			}
 
 			showData();
-			if (svgReady == 1) 
+			if (svgReady == 1)
 			{
 				updateConnectionDistribution(nfmarks, abc);
 				updateBandwidthOutgoing(qrates_out, abc);
@@ -173,7 +181,7 @@ No part of this file may be used without permission.
 
 			try
 			{
-				for (i = 2; i >= 0; --i) 
+				for (i = 2; i >= 0; --i)
 				{
 					e = E('svg' + i);
 					d = e.getSVGDocument();
@@ -211,18 +219,18 @@ No part of this file may be used without permission.
 					}
 				}
 			}
-			catch (ex) 
+			catch (ex)
 			{
 			}
 
-			if (i < 0) 
+			if (i < 0)
 			{
 				svgReady = 1;
 				updateConnectionDistribution(nfmarks, abc);
 				updateBandwidthOutgoing(qrates_out, abc);
 				updateBandwidthIncoming(qrates_in, abc);
 			}
-			else if (--svgReady > -5) 
+			else if (--svgReady > -5)
 			{
 				setTimeout(checkSVG, 500);
 			}
@@ -233,11 +241,11 @@ No part of this file may be used without permission.
 			if(toggle == true)
 			{
 				toggle=false;
-				qrates_out = qrates_out.slice(0, -1);	
+				qrates_out = qrates_out.slice(0, -1);
 				qrates_in = qrates_in.slice(0, -1);
 				showData();
 				checkSVG();
-			} else 
+			} else
 			{
 				toggle=true;
 				showData();
@@ -248,7 +256,7 @@ No part of this file may be used without permission.
 		function init() {
 
 			// Write Graphs to content
-			for (i=0; i < 2; i++) {
+			for (i=0; i < 3; i++) {
 				$('#svg-'+i).html('<embed id="svg' + i + '" type="image/svg+xml" pluginspage="http://www.adobe.com/svg/viewer/install/" src="img/qos-graph.svg?n=' + i + '&v=<% version(); %>" style="width:310px;height:310px;"></embed>').css('text-align', 'center');
 			}
 
@@ -266,37 +274,36 @@ No part of this file may be used without permission.
 		}
 	</script>
 
-	<div class="fluid-grid x3">
+	<div class="box graphs">
+		<div class="heading">Connections Distribution</div>
+		<div class="content">
+			<div id="svg-0" class="embedGraph"></div>
 
-		<div class="box graphs">
-			<div class="heading">Connections Distribution</div>
-			<div class="content">
-				<div id="svg-0" class="embedGraph"></div>
+			<table id="firstTable">
+				<tr><td>&nbsp;</td><td class="total">Total</td><td id="ccnt-total" class="total count"></td><td class="total pct">100%</td></tr>
+			</table>
 
-				<table id="firstTable">
-					<tr><td>&nbsp;</td><td class="total">Total</td><td id="ccnt-total" class="total count"></td><td class="total pct">100%</td></tr>
-				</table>
-
-				<script type="text/javascript">
-					for (i = 0; i < 11; ++i) {
-						$('#firstTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
-							'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
-							'<td class="title" style="width:60px">' + abc[i] + '</td>' +
-							'<td id="ccnt' + i + '" class="count" style="width:90px"></td>' +
-							'<td id="cpct' + i + '" class="pct"></td></tr>');
-					}
-				</script>
-			</div>
+			<script type="text/javascript">
+				for (i = 0; i < 11; ++i) {
+					$('#firstTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
+						'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
+						'<td class="title" style="width:60px">' + abc[i] + '</td>' +
+						'<td id="ccnt' + i + '" class="count" style="width:90px"></td>' +
+						'<td id="cpct' + i + '" class="pct"></td></tr>');
+				}
+			</script>
 		</div>
+	</div>
 
-		<div class="box graphs last">
+	<div class="fluid-grid x2">
+		<div class="box graphs">
 			<div class="heading">Bandwidth Distribution (Outbound)</div>
 			<div class="content">
 				<div id="svg-1" class="embedGraph"></div>
 
 				<table id="secondTable">
 					<tr><td class="color" style="height:1em; margin-right: 5px;"></td><td class="title">&nbsp;</td><td class="thead count">kbit/s</td><td class="thead count">KB/s</td><td class="thead pct">Rate</td></tr>
-					<tr><td>&nbsp;</td><td class="total">Total</td><td id="bcnt-total" class="total count"></td><td id="bcntx-total" class="total count"></td><td id="rateout" class="total pct"></td></tr>
+					<tr><td>&nbsp;</td><td class="total">Total</a></td><td id="bocnt-total" class="total count"></td><td id="bocntx-total" class="total count"></td><td id="rateout" class="total pct"></td></tr>
 				</table>
 
 				<script type='text/javascript'>
@@ -304,16 +311,41 @@ No part of this file may be used without permission.
 						$('#secondTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
 							'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
 							'<td class="title" style="width:45px">' + abc[i] + '</td>' +
-							'<td id="bcnt' + i + '" class="count" style="width:60px"></td>' +
-							'<td id="bcntx' + i + '" class="count" style="width:50px"></td>' +
-							'<td id="bpct' + i + '" class="pct"></td></tr>');
+							'<td id="bocnt' + i + '" class="count" style="width:60px"></td>' +
+							'<td id="bocntx' + i + '" class="count" style="width:50px"></td>' +
+							'<td id="bopct' + i + '" class="pct"></td></tr>');
 					}
 				</script>
 			</div>
 		</div>
 
+		<div class="box graphs">
+			<div class="heading">Bandwidth Distribution (Inbound)</div>
+			<div class="content">
+				<div id="svg-2" class="embedGraph"></div>
+
+				<table id="thirdTable">
+					<tr><td class="color" style="height:1em; margin-right: 5px;"></td><td class="title">&nbsp;</td><td class="thead count">kbit/s</td><td class="thead count">KB/s</td><td class="thead pct">Rate</td></tr>
+					<tr><td>&nbsp;</td><td class="total">Total</a></td><td id="bicnt-total" class="total count"></td><td id="bicntx-total" class="total count"></td><td id="ratein" class="total pct"></td></tr>
+				</table>
+
+				<script type="text/javascript">
+					for (i = 1; i < 11; ++i) {
+						$('#thirdTable').prepend('<tr style="cursor:pointer" onclick="mClick(' + i + ')">' +
+							'<td class="color" style="background:#' + colors[i] + '" onclick="mClick(' + i + ')">&nbsp;</td>' +
+							'<td class="title">' + abc[i] + '</td>' +
+							'<td id="bicnt' + i + '" class="count"></td>' +
+							'<td id="bicntx' + i + '" class="count"></td>' +
+							'<td id="bipct' + i + '" class="pct"></td></tr>');
+					}
+				</script>
+
+			</div>
+		</div>
 	</div>
 
-	<script type="text/javascript">$('.box.last').after(genStdRefresh(1,2,"ref.toggle()"));</script>
+	<button name="mybtn" value="Zoom Graphs" type="button" onclick="showGraph()" class="btn">Zoom Graphs <i class="icon-search"></i></button>
+	<script type="text/javascript">$('button[name="mybtn"]').before(genStdRefresh(1,2,"ref.toggle()"));</script>
+
 	<script type="text/javascript">init();</script>
 </content>
