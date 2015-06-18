@@ -1,7 +1,7 @@
 if USE_COLOR
-SUBDIRS = man syntax texinfo
+SUBDIRS = man syntax
 else
-SUBDIRS = man texinfo
+SUBDIRS = man
 endif
 
 EXTRA_DIST = faq.html
